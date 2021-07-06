@@ -2,6 +2,7 @@ import sys
 from random_word import RandomWords
 import threading as th
 import Hangman_Visuals
+from collections import Counter
 
 
 def game_start():
@@ -25,10 +26,17 @@ def word_family(dictionary: list, guess: str):
     for i in dictionary:
         count_dict[i.count(guess)].append(i)
 
-    longest = max(len(count_list) for count_list in count_dict.values())
-    longest_word_list = [word_list for word_list in count_dict.values() if len(word_list) == longest]
+    #longest = max(len(count_list) for count_list in count_dict.values())
+    #longest_word_list = [word_list for word_list in count_dict.values() if len(word_list) == longest]
+    indices = Counter([tuple([index for index, letter in enumerate(word) if letter == guess]) for word in dictionary])
+    max_count = max(indices, key = indices.get)
+    word_family = []
+    for word in dictionary:
+        if tuple([index for index, letter in enumerate(word) if letter == guess]) == max_count:
+            word_family.append(word)
 
-    return longest_word_list
+
+    #return longest_word_list
 
 
 def guess_letter():
